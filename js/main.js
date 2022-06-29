@@ -121,7 +121,8 @@ let game = {
 
     const checkPath = () => {
         let valid = true,
-            pt = new Path2D();
+            pt = new Path2D(),
+            step = game.lineWidth;
         chtx.strokeStyle = 'rgba(0,0,0,0.2)';
         chtx.fillStyle = "white";
         chtx.fillRect(0, 0, p[0].width, p[0].height);
@@ -145,8 +146,8 @@ let game = {
         chtx.stroke(game.paths[0]);
 
         let pixel;
-        for (let i = 1; i <= game.maxXY; i++) {
-            for (let h = 1; h <= game.maxXY; h++) {
+        for (let i = 1; i <= game.maxXY; i += step) {
+            for (let h = 1; h <= game.maxXY; h += step) {
                 pixel = chtx.getImageData(i, h, 1, 1).data;
                 if ((
                     pixel[0] > 0 ||
@@ -193,9 +194,9 @@ let game = {
         game.canDraw = false;
         ptx.clearRect(0, 0, p[0].width, p[0].height);
         if (!game.valid) return path = [];
-        if(checkPath()) {
+        if (checkPath()) {
             $(obj).data('done', 1);
-            $('.'+$(obj).data('target')).data('done', 1);
+            $('.' + $(obj).data('target')).data('done', 1);
             checkWinner();
         }
         game.valid = false;
