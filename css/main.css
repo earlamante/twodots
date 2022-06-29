@@ -97,3 +97,15 @@ a.close {
     transform: translate(-50%, -50%);
     z-index: 999;
 }
+
+#game_menu {
+    margin: 0 auto;
+    padding: 50px;
+}
+#game_menu button {
+    display: block;
+    padding: 15px;
+    margin: 0 auto 10px;
+    max-width: 250px;
+    width: 100%;
+}

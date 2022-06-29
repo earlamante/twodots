@@ -7,10 +7,35 @@ let game = {
     colors: ['ff0000', '00ff00', '0000ff', 'ffff00'],
     levels: [
         [
-            [2187, 2382, 7166]
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
         ],
-        [],
-        [],
+        [
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+        ],
+        [
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+            [2187, 2382, 7166],
+        ],
     ],
     paths: [],
     levelCompleted: [],
@@ -18,7 +43,8 @@ let game = {
     currentTarget: 'null',
 };
 (function ($) {
-    let gw = $('#game_wrapper'),
+    let gm = $('#game_menu'),
+        gw = $('#game_wrapper'),
         gs = $('#game'),
         p = $('#pad'),
         settings = $('#settings'),
@@ -40,9 +66,22 @@ let game = {
         ptx.lineCap = ctx.lineCap = chtx.lineCap = 'round';
         ptx.lineWidth = ctx.lineWidth = chtx.lineWidth = game.lineWidth;
 
+        getData();
         goLevel();
     }
 
+    const updateData = () => {
+        const data = {
+            levelCompleted: game.levelCompleted
+        };
+        localStorage.setItem('twodots', JSON.stringify(data));
+    }
+    const getData = () => {
+        const data = JSON.parse(localStorage.getItem('twodots'));
+        if(data) {
+            game.levelCompleted = data.levelCompleted ?? [];
+        }
+    }
     const goLevel = () => {
         game.paths = [];
         ctx.clearRect(0, 0, p[0].width, p[0].height);
@@ -226,7 +265,15 @@ let game = {
             }
         });
         if (win) {
+            if(!game.currentLevel.includes(game.currentLevel)) {
+                game.levelCompleted.push(game.currentLevel);
+            }
+            updateData();
             alert('Well done!');
+            gm.removeClass('d-none');
+            gw.addClass('d-none');
+            settings.addClass('d-none');
+            gameMenu(game.currentLevel.substring(0,1));
         }
     }
     const rgbToHex = (r, g, b) => {
@@ -240,20 +287,44 @@ let game = {
             b = parseInt(color.substring(4), 16);
         return 'rgba(' + r + ',' + g + ',' + b + ',0.5)';
     }
+    const gameMenu = (item) => {
+        let n = ['EASY', 'INTERMEDIATE', 'EXPERT'];
+        gm.html('');
+        if (item.length === 1) {
+            $('<button data-level="main">Back</button>').appendTo(gm);
+            for (let i = 0; i < game.levels[item].length; i++) {
+                $('<button data-level="'+ x + '' + i + '">' + n[item] + ' - '+ (i+1) +'</button>').appendTo(gm);
+                if(!game.levelCompleted.includes(item + '' + i)) break;
+            }
+        } else if(item.length === 2) {
+            game.currentLevel = item;
+            gm.addClass('d-none');
+            gw.removeClass('d-none');
+            settings.removeClass('d-none');
+            goLevel();
+        } else {
+            for (let i = 0; i < game.levels.length; i++) {
+                $('<button data-level="' + i + '">' + n[i] + '</button>').appendTo(gm);
+            }
+        }
+    }
 
+    gm
+        .on('click', 'button', function (e) {
+            gameMenu($(this).data('level').toString());
+        });
     settings
+        .on('click', '#go_main', function(e) {
+            gm.removeClass('d-none');
+            gw.addClass('d-none');
+            settings.addClass('d-none');
+            gameMenu('main');
+        })
         .on('click', '#reset', function (e) {
-            e.preventDefault();
-
             goLevel();
         });
+
     p
-        .on('click', '.dz', function (e) {
-            e.preventDefault();
-        })
-        .on('contextmenu', '.cell', function (e) {
-            e.preventDefault();
-        })
         .on('mousemove', drawPath)
         .on('mouseup', stopDraw);
 
