@@ -126,7 +126,6 @@ let game = {
         if(offset) {
             l += offset[0];
             t += offset[1];
-            console.log(game.offset[x+''+y]);
         }
 
         gw.append('<i class="node ' + x + '-' + y + '" style="background-color: #' + game.colors[c] + ';' +
@@ -146,6 +145,25 @@ let game = {
         p.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 30), 0, 2 * Math.PI);
         ctx.stroke(p);
         game.paths.push(p);
+    }
+
+    const drawNode = (x, y) => {
+        const step = game.maxXY / 10,
+            w = step * 0.5,
+            h = step / 2,
+            offset = game.offset[x+''+y];
+
+        let t = (y * step) + h,
+            l = (x * step) + h;
+        if(offset) {
+            l += offset[0];
+            t += offset[1];
+        }
+
+        chtx.beginPath();
+        chtx.arc(l, t, (w / 2), 0, 2 * Math.PI);
+        chtx.fillStyle = '#000';
+        chtx.fill();
     }
 
     const showGrid = () => {
@@ -204,9 +222,17 @@ let game = {
         chtx.lineWidth = 5;
         chtx.stroke(game.paths[0]);
 
+        [a, b] = game.currentLevel.split('');
+        let nodes = game.levels[a][b];
+        for (i in nodes) {
+            [a, b, c, d] = nodes[i].toString().split('');
+            drawNode(a, b);
+            drawNode(c, d);
+        }
+
         let pixel;
-        for (let i = 1; i <= game.maxXY; i += step) {
-            for (let h = 1; h <= game.maxXY; h += step) {
+        for (let i = 30; i <= (game.maxXY-30); i += step) {
+            for (let h = 30; h <= (game.maxXY-30); h += step) {
                 pixel = chtx.getImageData(i, h, 1, 1).data;
                 if ((
                     pixel[0] > 0 ||
@@ -229,6 +255,7 @@ let game = {
             return true;
         }
         alert('invalid move!');
+
         path = [];
         return false;
     }
@@ -328,11 +355,20 @@ let game = {
             }
         }
     }
+    const prepareDraw = (obj) => {
+        if ($(obj).data('done') === 1) return;
+        x = $(obj).css('left').replace('px', '');
+        y = $(obj).css('top').replace('px', '');
+        game.currentTarget = $(obj).data('target');
+        ptx.strokeStyle = ctx.strokeStyle = '#' + $(obj).data('color');
+        startDraw();
+    }
 
     gm
         .on('click', 'button', function (e) {
             gameMenu($(this).data('level').toString());
         });
+
     settings
         .on('click', '#go_main', function (e) {
             gm.removeClass('d-none');
@@ -351,13 +387,7 @@ let game = {
     gw
         .on('mousedown', '.node', function (e) {
             e.preventDefault();
-            if ($(this).data('done') === 1) return;
-
-            x = $(this).css('left').replace('px', '');
-            y = $(this).css('top').replace('px', '');
-            game.currentTarget = $(this).data('target');
-            ptx.strokeStyle = ctx.strokeStyle = '#' + $(this).data('color');
-            startDraw();
+            prepareDraw($(this));
         })
         .on('mouseenter', '.node', function (e) {
             if ($(this).hasClass(game.currentTarget)) {
