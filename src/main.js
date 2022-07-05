@@ -3,7 +3,7 @@ let game = {
     waitingDraw: false,
     canDraw: false,
     valid: false,
-    lineWidth: 5,
+    lineWidth: 10,
     oob: [0, 1, 2, 3, 6, 7, 8, 9, 10, 11, 18, 19, 20, 29, 30, 39, 60, 69, 70, 79, 80, 81, 88, 89, 90, 91, 92, 93, 96, 97, 98, 99],
     offset: {
         '03': [20,0],
@@ -165,7 +165,7 @@ let game = {
 
     const drawNode = (x, y) => {
         const step = game.maxXY / 10,
-            w = step * 0.7,
+            w = step * 0.5,
             h = step / 2,
             offset = game.offset[x+''+y];
 
@@ -213,7 +213,6 @@ let game = {
     }
 
     const checkPath = () => {
-        console.log('checking');
         let valid = true,
             pt = new Path2D(),
             step = game.lineWidth;
@@ -267,7 +266,6 @@ let game = {
                     valid = false;
                 }
                 if (!valid) {
-                    console.log(pixel);
                     break;
                 }
             }
@@ -306,14 +304,12 @@ let game = {
         drawGame();
     }
     const stopDraw = () => {
-        console.log('stopping');
         if (game.waitingDraw) {
             game.waitingDraw = false;
             game.currentTarget = '';
             return;
         }
         if (!game.canDraw) return;
-        console.log('stopped');
         game.canDraw = false;
         if (!game.valid) {
             drawGame();
@@ -326,8 +322,7 @@ let game = {
     }
     const checkWinner = () => {
         [a, b] = game.currentLevel.split('');
-        let win = false,
-            nodes = game.levels[a][b];
+        let nodes = game.levels[a][b];
         if (game.done.length >= nodes.length) {
             if (!game.levelCompleted.includes(game.currentLevel)) {
                 game.levelCompleted.push(game.currentLevel);
