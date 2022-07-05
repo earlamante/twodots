@@ -78,6 +78,7 @@ a.close {
 }
 
 #game {
+    cursor: crosshair;
     position: relative;
     z-index: 1;
 }

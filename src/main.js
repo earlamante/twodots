@@ -1,5 +1,6 @@
 let game = {
     maxXY: 500,
+    waitingDraw: false,
     canDraw: false,
     valid: false,
     lineWidth: 5,
@@ -51,23 +52,27 @@ let game = {
             ['0474', '1776', '5471', '8226'],
         ],
     ],
+    done: [],
     paths: [],
     levelCompleted: [],
     currentLevel: '00',
-    currentTarget: 'null',
+    currentTarget: '',
+    startX: 0,
+    startY: 0,
 };
 (function ($) {
     let gm = $('#game_menu'),
         gw = $('#game_wrapper'),
         gs = $('#game'),
-        p = $('#pad'),
+        ps = $('#path'),
         settings = $('#settings'),
         ctx = gs[0].getContext('2d'),
-        ptx = p[0].getContext('2d'),
+        ptx = ps[0].getContext('2d'),
         chtx = $('#check')[0].getContext('2d'),
         x = 0,
         y = 0,
-        path = [];
+        path = [],
+        canvas = document.getElementById('game');
 
     const init = () => {
         if ($(window).width() < game.maxXY) game.maxXY = $(window).width();
@@ -96,13 +101,22 @@ let game = {
             game.levelCompleted = data.levelCompleted ? data.levelCompleted : [];
         }
     }
-    const goLevel = () => {
-        game.paths = [];
-        ctx.clearRect(0, 0, p[0].width, p[0].height);
-        ptx.strokeStyle = ctx.strokeStyle = '#000';
+    const drawGame = () => {
+        ptx.fillStyle = ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, gs[0].width, gs[0].height);
+        ptx.fillRect(0, 0, gs[0].width, gs[0].height);
+        ctx.strokeStyle = '#000';
+
         drawCircle();
 
-        gw.find('.node').remove();
+        if(game.paths.length) {
+            ctx.lineWidth = game.lineWidth;
+            for(i in game.paths) {
+                ctx.strokeStyle = game.paths[i].color;
+                ctx.stroke(game.paths[i].path);
+            }
+        }
+
         [a, b] = game.currentLevel.split('');
         let nodes = game.levels[a][b];
         for (i in nodes) {
@@ -113,7 +127,13 @@ let game = {
 
         // showGrid();
     }
-
+    const goLevel = () => {
+        game.paths = [];
+        game.done = [];
+        game.paths = [];
+        game.currentTarget = '';
+        drawGame();
+    }
     const placeNode = (x, y, a, b, c) => {
         const step = game.maxXY / 10,
             w = step * 0.8,
@@ -128,15 +148,12 @@ let game = {
             t += offset[1];
         }
 
-        gw.append('<i class="node ' + x + '-' + y + '" style="background-color: #' + game.colors[c] + ';' +
-            'width: ' + w + 'px;' +
-            'height: ' + w + 'px;' +
-            'top:' + t + 'px;' +
-            'left:' + l + 'px;' + '" ' +
-            'data-color="' + game.colors[c] + '" ' +
-            'data-target="' + a + '-' + b + '"' +
-            'data-done="0"' +
-            '></i>');
+        const p = new Path2D();
+        ctx.beginPath();
+        p.arc(l, t, h, 0, 2 * Math.PI);
+        ptx.fillStyle = ctx.fillStyle = '#' + game.colors[c];
+        ctx.fill(p);
+        ptx.fill(p);
     }
 
     const drawCircle = () => {
@@ -144,12 +161,11 @@ let game = {
         ctx.lineWidth = 5;
         p.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 30), 0, 2 * Math.PI);
         ctx.stroke(p);
-        game.paths.push(p);
     }
 
     const drawNode = (x, y) => {
         const step = game.maxXY / 10,
-            w = step * 0.5,
+            w = step * 0.7,
             h = step / 2,
             offset = game.offset[x+''+y];
 
@@ -197,17 +213,17 @@ let game = {
     }
 
     const checkPath = () => {
+        console.log('checking');
         let valid = true,
             pt = new Path2D(),
             step = game.lineWidth;
         chtx.strokeStyle = 'rgba(0,0,0,0.2)';
         chtx.fillStyle = "white";
-        chtx.fillRect(0, 0, p[0].width, p[0].height);
+        chtx.fillRect(0, 0, gs[0].width, gs[0].height);
+
         for (i in game.paths) {
-            if (i > 0) {
-                chtx.lineWidth = game.lineWidth;
-                chtx.stroke(game.paths[i]);
-            }
+            chtx.lineWidth = game.lineWidth;
+            chtx.stroke(game.paths[i].path);
         }
         for (i in path) {
             let c = path[i].split(',');
@@ -219,15 +235,20 @@ let game = {
             }
         }
         chtx.stroke(pt);
-        chtx.lineWidth = 5;
-        chtx.stroke(game.paths[0]);
 
-        [a, b] = game.currentLevel.split('');
-        let nodes = game.levels[a][b];
-        for (i in nodes) {
-            [a, b, c, d] = nodes[i].toString().split('');
-            drawNode(a, b);
-            drawNode(c, d);
+        pt = new Path2D();
+        chtx.lineWidth = 5;
+        pt.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 30), 0, 2 * Math.PI);
+        chtx.stroke(pt);
+
+        if(game.maxXY >= 500) {
+            [a, b] = game.currentLevel.split('');
+            let nodes = game.levels[a][b];
+            for (i in nodes) {
+                [a, b, c, d] = nodes[i].toString().split('');
+                drawNode(a, b);
+                drawNode(c, d);
+            }
         }
 
         let pixel;
@@ -245,11 +266,13 @@ let game = {
                 )) {
                     valid = false;
                 }
-                if (!valid) break;
+                if (!valid) {
+                    console.log(pixel);
+                    break;
+                }
             }
             if (!valid) break;
         }
-        chtx.strokeStyle = 'rgba(0,0,0,0.2)';
         if (valid) {
             registerPath();
             return true;
@@ -257,6 +280,7 @@ let game = {
         alert('invalid move!');
 
         path = [];
+        drawGame();
         return false;
     }
     const registerPath = () => {
@@ -271,47 +295,40 @@ let game = {
                 p.moveTo(c[0], c[1]);
             }
         }
-        ctx.stroke(p);
-        game.paths.push(p);
+        [r,g,b]  = game.currentTarget.split(',');
+        game.paths.push({
+            color: '#' + rgbToHex(parseInt(r),parseInt(g),parseInt(b)),
+            path: p,
+        });
+        game.done.push(game.currentTarget);
+        game.currentTarget = '';
         path = [];
+        drawGame();
     }
-    const stopDraw = (obj) => {
+    const stopDraw = () => {
+        console.log('stopping');
+        if (game.waitingDraw) {
+            game.waitingDraw = false;
+            game.currentTarget = '';
+            return;
+        }
         if (!game.canDraw) return;
+        console.log('stopped');
         game.canDraw = false;
-        ptx.clearRect(0, 0, p[0].width, p[0].height);
-        if (!game.valid) return path = [];
+        if (!game.valid) {
+            drawGame();
+            return path = [];
+        }
         if (checkPath()) {
-            $(obj).data('done', 1);
-            $('.' + $(obj).data('target')).data('done', 1);
             checkWinner();
         }
         game.valid = false;
     }
-    const startDraw = e => {
-        game.canDraw = true;
-        path.push(x + ',' + y);
-    }
-    const drawPath = e => {
-        if (game.canDraw) {
-            const newX = e.offsetX;
-            const newY = e.offsetY;
-            ptx.beginPath();
-            ptx.moveTo(x, y);
-            ptx.lineTo(newX, newY);
-            ptx.stroke();
-            x = newX;
-            y = newY;
-            path.push(x + ',' + y);
-        }
-    }
     const checkWinner = () => {
-        let win = true;
-        gw.find('.node').each(function () {
-            if ($(this).data('done') === 0) {
-                win = false;
-            }
-        });
-        if (win) {
+        [a, b] = game.currentLevel.split('');
+        let win = false,
+            nodes = game.levels[a][b];
+        if (game.done.length >= nodes.length) {
             if (!game.levelCompleted.includes(game.currentLevel)) {
                 game.levelCompleted.push(game.currentLevel);
             }
@@ -323,16 +340,46 @@ let game = {
             gameMenu(game.currentLevel.substring(0, 1));
         }
     }
-    const rgbToHex = (r, g, b) => {
-        if (r > 255 || g > 255 || b > 255)
-            throw "Invalid color component";
-        return ((r << 16) | (g << 8) | b).toString(16);
+    const drawPath = (newX, newY) => {
+        const pixel = getPixel(newX,newY);
+        const currentColor = pixel[0]+','+pixel[1]+','+pixel[2];
+        if(game.waitingDraw) {
+            if(currentColor === '255,255,255') {
+                game.waitingDraw = false;
+                game.canDraw = true;
+                [r,g,b]  = game.currentTarget.split(',');
+                ctx.strokeStyle = '#' + rgbToHex(parseInt(r),parseInt(g),parseInt(b));
+                game.startX = x = newX;
+                game.startY = y = newY;
+            }
+        }
+        if (game.canDraw) {
+            if(currentColor === game.currentTarget) {
+                if((Math.abs(game.startX - x) > 20) && Math.abs(game.startY - y) > 20) {
+                    game.valid = true;
+                }
+                stopDraw();
+            } else {
+                ctx.lineWidth = game.lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(newX, newY);
+                ctx.stroke();
+                x = newX;
+                y = newY;
+                path.push(x + ',' + y);
+            }
+        }
     }
-    const getColor = (color) => {
-        const r = parseInt(color.substring(0, 2), 16),
-            g = parseInt(color.substring(2, 4), 16),
-            b = parseInt(color.substring(4), 16);
-        return 'rgba(' + r + ',' + g + ',' + b + ',0.5)';
+    const prepareDraw = (x, y) => {
+        // check game state
+        if(!game.waitingDraw) {
+            const pixel = getPixel(x,y);
+            if((pixel[0]+pixel[1]+pixel[2] < 765) && !game.done.includes(pixel[0]+','+pixel[1]+','+pixel[2])) {
+                game.waitingDraw = true;
+                game.currentTarget = pixel[0]+','+pixel[1]+','+pixel[2];
+            }
+        }
     }
     const gameMenu = (item) => {
         let n = ['BEGINNER', 'INTERMEDIATE', 'EXPERT'];
@@ -355,15 +402,25 @@ let game = {
             }
         }
     }
-    const prepareDraw = (obj) => {
-        if ($(obj).data('done') === 1) return;
-        x = $(obj).css('left').replace('px', '');
-        y = $(obj).css('top').replace('px', '');
-        game.currentTarget = $(obj).data('target');
-        ptx.strokeStyle = ctx.strokeStyle = '#' + $(obj).data('color');
-        startDraw();
+    const getPixel = (x, y) => {
+        const pixel = ptx.getImageData(x, y, 1, 1).data;
+        return [pixel[0],pixel[1],pixel[2]];
+    };
+    const rgbToHex = (r, g, b) => {
+        if (r > 255 || g > 255 || b > 255)
+            throw "Invalid color component";
+        return (
+            ('0'+r.toString(16)).slice(-2) + '' +
+            ('0'+g.toString(16)).slice(-2) + '' +
+            ('0'+b.toString(16)).slice(-2)
+        );
     }
-
+    const getColor = (color) => {
+        const r = parseInt(color.substring(0, 2), 16),
+            g = parseInt(color.substring(2, 4), 16),
+            b = parseInt(color.substring(4), 16);
+        return 'rgba(' + r + ',' + g + ',' + b + ',0.5)';
+    }
     gm
         .on('click', 'button', function (e) {
             gameMenu($(this).data('level').toString());
@@ -380,20 +437,34 @@ let game = {
             goLevel();
         });
 
-    p
-        .on('mousemove', drawPath)
-        .on('mouseup', stopDraw);
-
     gw
-        .on('mousedown', '.node', function (e) {
-            e.preventDefault();
-            prepareDraw($(this));
-        })
-        .on('mouseenter', '.node', function (e) {
-            if ($(this).hasClass(game.currentTarget)) {
-                game.valid = true;
+        .on('touchstart', function(e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+                prepareDraw(e.touches[0].clientX - gw.offset().left, e.touches[0].clientY - gw.offset().top);
             }
-            stopDraw($(this));
-        });
+        })
+        .on('touchmove', function(e) {
+            if(
+                e.touches[0].clientX - gw.offset().left < 0 ||
+                e.touches[0].clientX > gw.width() ||
+                e.touches[0].clientY < gw.offset().top ||
+                e.touches[0].clientY > (gw.offset().top + gw.height())
+            ) {
+                stopDraw();
+            } else {
+                drawPath(e.touches[0].clientX - gw.offset().left, e.touches[0].clientY - gw.offset().top);
+            }
+        })
+        .on('touchend', stopDraw)
+        .on('mousedown',function (e) {
+            e.preventDefault();
+            prepareDraw(e.offsetX, e.offsetY);
+        })
+        .on('mousemove', function(e) {
+            drawPath(e.offsetX, e.offsetY);
+        })
+        .on('mouseup', stopDraw)
+        .on('mouseleave', stopDraw);
     init();
 })(jQuery);
