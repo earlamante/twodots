@@ -1,12 +1,81 @@
 @font-face {
-    font-family: 'Digital Numbers Regular';
-    font-style: normal;
+    font-family: 'td';
+    src: url('../fonts/td.woff2') format('woff2'),
+    url('../fonts/td.woff') format('woff');
     font-weight: normal;
-    src: local('Digital Numbers Regular'), url('../fonts/DigitalNumbers-Regular.woff') format('woff');
+    font-style: normal;
 }
 
 body {
+    background: #ccc;
+    display: flex;
+    font-family: td, sans-serif;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
 
+h2 {
+    align-items: center;
+    background: #000;
+    color: #fff;
+    letter-spacing: 5px;
+    margin: 0 -10px 80px;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.toypix-logo {
+    background: #fff;
+    border: 1px solid #000;
+    padding: 25px;
+    width: 100%;
+    top: 0;
+    position: absolute;
+    z-index: 1;
+}
+.toypix-logo h1 {
+    line-height: 0;
+    margin: 0;
+}
+.toypix-logo img {
+    height: 30px;
+}
+
+.viewport {
+    background-image: url('../img/bg-1.jpg');
+    background-size: cover;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 480px;
+    padding-top: 80px;
+    position: relative;
+    height: 100vh;
+    width: 100%;
+}
+.viewport.in-game {
+    background-image: url('../img/bg-2.jpg');
+}
+
+.main-content {
+    background: rgba(255,255,255,0.3);
+    padding: 20px;
+    width: 80%;
+}
+
+.main-content button {
+    background-image: linear-gradient(#FD9906, #F0CE2F);
+    border: 5px solid #000;
+    border-radius: 50px;
+    display: block;
+    font-size: 40px;
+    margin-top: 50px;
+    padding: 5px 0 0;
+    width: 100%;
 }
 
 #overlay {
@@ -23,17 +92,6 @@ body {
 #overlay.show {
     opacity: 1;
     z-index: 99;
-}
-
-#settings button {
-    background: #f4f4f4;
-    border: 2px solid #3d3d3d;
-}
-
-#settings button.active {
-    background: #5a5a5a;
-    border: 2px solid #3d3d3d;
-    color: #fff;
 }
 
 #settings .top-menu {
@@ -72,9 +130,15 @@ a.close {
 }
 
 #game_wrapper {
-    /*background: #eee;*/
     margin: 0 auto;
     position: relative;
+}
+
+#game_wrapper img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #game {
@@ -99,14 +163,58 @@ a.close {
     z-index: 999;
 }
 
-#game_menu {
-    margin: 0 auto;
-    padding: 50px;
+.lvl-select button {
+    border: 3px solid #000;
+    background-image: linear-gradient(#8DD737, #70BA1B);
+    border-radius: 20px;
+    color: #ffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto 0;
+    width: 80px;
+    height: 80px;
 }
-#game_menu button {
-    display: block;
+.lvl-select span {
+    transform: translateX(-3px);
+}
+.lvl-select button.current {
+    background-image: linear-gradient(#D73838, #CB0301);
+}
+.lvl-select button.disabled {
+    background: #0F0F0F;
+}
+
+#settings {
     padding: 15px;
-    margin: 0 auto 10px;
-    max-width: 250px;
+    margin-top: 80px;
+    background: rgba(0,0,0,0.4);
+}
+#settings button {
+    display: inline-block;
+    font-size: 26px;
+    margin: 0 5px;
+    max-width: 200px;
+    vertical-align: middle;
+}
+#settings button#reset {
+    background: red;
+    position: relative;
+    width: 54px;
+    height: 54px;
+}
+#settings button#reset img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 768px) {
+    .viewport {
+        aspect-ratio: 9 / 16;
+        height: auto;
+        overflow: hidden;
+    }
 }

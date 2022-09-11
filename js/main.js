@@ -1,1 +1,507 @@
-let game={maxXY:500,waitingDraw:!1,canDraw:!1,valid:!1,lineWidth:10,oob:[0,1,2,3,6,7,8,9,10,11,18,19,20,29,30,39,60,69,70,79,80,81,88,89,90,91,92,93,96,97,98,99],offset:{"03":[20,0],"06":[20,0],30:[0,20],60:[0,20],"04":[15,0],"05":[15,0],40:[15,0],50:[15,0],93:[-20,0],96:[-20,0],39:[0,-20],69:[0,-20],49:[0,-15],59:[0,-15],94:[-15,0],95:[-15,0]},colors:["ff0000","00ff00","0000ff","ffff00"],levels:[[["2187","7166","2382"],["2187","0566","0328"],["1259","5278","6057"],["2460","0657","1274"],["1269","2687","2157"],["4036","3378","1274"],["2193","2460","4057"],["2124","2872","0547"]],[["0454","4078","2135","2876"],["2125","0647","2873","6075"],["2146","1764","2594","3378"],["1244","2833","4294","4660"],["3073","0565","3693","3459"],["0334","2659","4296","6671"],["2176","0432","4694","2359"],["1734","1369","5295","6671"]],[["3056","0537","3593","2852"],["0575","4249","2595","4047"],["4387","1256","3693","1763"],["0474","1776","5471","8226"]]],done:[],paths:[],levelCompleted:[],currentLevel:"00",currentTarget:"",startX:0,startY:0};!function(n){let l=n("#game_menu"),o=n("#game_wrapper"),m=n("#game"),e=n("#path"),s=n("#settings"),h=m[0].getContext("2d"),f=e[0].getContext("2d"),u=n("#check")[0].getContext("2d"),v=0,p=0,w=[],t=document.getElementById("game");const X=()=>{var e=JSON.parse(localStorage.getItem("twodots"));e&&(game.levelCompleted=e.levelCompleted||[])};var Y=()=>{if(f.fillStyle=h.fillStyle="white",h.fillRect(0,0,m[0].width,m[0].height),f.fillRect(0,0,m[0].width,m[0].height),h.strokeStyle="#000",D(),game.paths.length)for(i in h.lineWidth=game.lineWidth,game.paths)h.strokeStyle=game.paths[i].color,h.stroke(game.paths[i].path);[a,b]=game.currentLevel.split("");let e=game.levels[a][b];for(i in e)[a,b,c,d]=e[i].toString().split(""),C(a,b,c,d,i),C(c,d,a,b,i)};const x=()=>{game.paths=[],game.done=[],game.paths=[],game.currentTarget="",Y()},C=(e,t,a,n,l)=>{var i=game.maxXY/10,o=i/2,r=game.offset[e+""+t];let g=t*i+o,m=e*i+o;r&&(m+=r[0],g+=r[1]);const s=new Path2D;h.beginPath(),s.arc(m,g,o,0,2*Math.PI),f.fillStyle=h.fillStyle="#"+game.colors[l],h.fill(s),f.fill(s)},D=()=>{const e=new Path2D;h.lineWidth=5,e.arc(game.maxXY/2,game.maxXY/2,game.maxXY/2-30,0,2*Math.PI),h.stroke(e)};var T=(e,t)=>{var a=game.maxXY/10,n=.5*a,l=a/2,i=game.offset[e+""+t];let o=t*a+l,r=e*a+l;i&&(r+=i[0],o+=i[1]),u.beginPath(),u.arc(r,o,n/2,0,2*Math.PI),u.fillStyle="#000",u.fill()};const S=()=>{const e=new Path2D;for(i in h.lineWidth=game.lineWidth,w){var t=w[i].split(",");0<i&&e.lineTo(t[0],t[1]),e.moveTo(t[0],t[1])}[r,g,b]=game.currentTarget.split(","),game.paths.push({color:"#"+L(parseInt(r),parseInt(g),parseInt(b)),path:e}),game.done.push(game.currentTarget),game.currentTarget="",w=[],Y()};var I=()=>{if(game.waitingDraw)return game.waitingDraw=!1,void(game.currentTarget="");if(game.canDraw){if(game.canDraw=!1,!game.valid)return Y(),w=[];(()=>{let n=!0,e=new Path2D,l=game.lineWidth;for(i in u.strokeStyle="rgba(0,0,0,0.2)",u.fillStyle="white",u.fillRect(0,0,m[0].width,m[0].height),game.paths)u.lineWidth=game.lineWidth,u.stroke(game.paths[i].path);for(i in w){var t=w[i].split(",");0<i&&e.lineTo(t[0],t[1]),e.moveTo(t[0],t[1])}if(u.stroke(e),e=new Path2D,u.lineWidth=5,e.arc(game.maxXY/2,game.maxXY/2,game.maxXY/2-30,0,2*Math.PI),u.stroke(e),500<=game.maxXY){[a,b]=game.currentLevel.split("");let e=game.levels[a][b];for(i in e)[a,b,c,d]=e[i].toString().split(""),T(a,b),T(c,d)}let o;for(let t=30;t<=game.maxXY-30;t+=l){for(let e=30;e<=game.maxXY-30&&(o=u.getImageData(t,e,1,1).data,(0<o[0]||0<o[1]||0<o[2])&&(o[0]<200||o[1]<200||o[2]<200)&&(n=!1),n);e+=l);if(!n)break}return n?(S(),!0):(alert("invalid move!"),w=[],Y(),!1)})()&&W(),game.valid=!1}};const W=()=>{[a,b]=game.currentLevel.split("");var e=game.levels[a][b];game.done.length>=e.length&&(game.levelCompleted.includes(game.currentLevel)||game.levelCompleted.push(game.currentLevel),e={levelCompleted:game.levelCompleted},localStorage.setItem("twodots",JSON.stringify(e)),alert("Well done!"),l.removeClass("d-none"),o.addClass("d-none"),s.addClass("d-none"),P(game.currentLevel.substring(0,1)))};var k=(e,t)=>{var a=E(e,t),a=a[0]+","+a[1]+","+a[2];game.waitingDraw&&"255,255,255"==a&&(game.waitingDraw=!1,game.canDraw=!0,[r,g,b]=game.currentTarget.split(","),h.strokeStyle="#"+L(parseInt(r),parseInt(g),parseInt(b)),game.startX=v=e,game.startY=p=t),game.canDraw&&(a===game.currentTarget?(20<Math.abs(game.startX-v)&&20<Math.abs(game.startY-p)&&(game.valid=!0),I()):(h.lineWidth=game.lineWidth,h.beginPath(),h.moveTo(v,p),h.lineTo(e,t),h.stroke(),v=e,p=t,w.push(v+","+p)))},y=(e,t)=>{game.waitingDraw||(t=E(e,t))[0]+t[1]+t[2]<765&&!game.done.includes(t[0]+","+t[1]+","+t[2])&&(game.waitingDraw=!0,game.currentTarget=t[0]+","+t[1]+","+t[2])};const P=t=>{var a=["BEGINNER","INTERMEDIATE","EXPERT"];if(l.html(""),1===t.length){n('<button data-level="main">Back</button>').appendTo(l);for(let e=0;e<game.levels[t].length&&(n('<button data-level="'+t+e+'">'+a[t]+" - "+(e+1)+"</button>").appendTo(l),game.levelCompleted.includes(t+""+e));e++);}else if(2===t.length)game.currentLevel=t,l.addClass("d-none"),o.removeClass("d-none"),s.removeClass("d-none"),x();else for(let e=0;e<game.levels.length;e++)n('<button data-level="'+e+'">'+a[e]+"</button>").appendTo(l)},E=(e,t)=>{t=f.getImageData(e,t,1,1).data;return[t[0],t[1],t[2]]},L=(e,t,a)=>{if(255<e||255<t||255<a)throw"Invalid color component";return("0"+e.toString(16)).slice(-2)+""+("0"+t.toString(16)).slice(-2)+("0"+a.toString(16)).slice(-2)};l.on("click","button",function(e){P(n(this).data("level").toString())}),s.on("click","#go_main",function(e){l.removeClass("d-none"),o.addClass("d-none"),s.addClass("d-none"),P("main")}).on("click","#reset",function(e){x()}),o.on("touchstart",function(e){e.target==t&&(e.preventDefault(),y(e.touches[0].clientX-o.offset().left,e.touches[0].clientY-o.offset().top))}).on("touchmove",function(e){e.touches[0].clientX-o.offset().left<0||e.touches[0].clientX>o.width()||e.touches[0].clientY<o.offset().top||e.touches[0].clientY>o.offset().top+o.height()?I():k(e.touches[0].clientX-o.offset().left,e.touches[0].clientY-o.offset().top)}).on("touchend",I).on("mousedown",function(e){e.preventDefault(),y(e.offsetX,e.offsetY)}).on("mousemove",function(e){k(e.offsetX,e.offsetY)}).on("mouseup",I).on("mouseleave",I),n(window).width()<game.maxXY&&(game.maxXY=n(window).width()),o.css({width:game.maxXY+"px",height:game.maxXY+"px"}),f.canvas.height=h.canvas.height=u.canvas.height=game.maxXY,f.canvas.width=h.canvas.width=u.canvas.width=game.maxXY,f.lineCap=h.lineCap=u.lineCap="round",f.lineWidth=h.lineWidth=u.lineWidth=game.lineWidth,X(),x()}(jQuery);
+let game = {
+    maxXY: 350,
+    waitingDraw: false,
+    canDraw: false,
+    valid: false,
+    lineWidth: 10,
+    oob: [0, 1, 2, 3, 6, 7, 8, 9, 10, 11, 18, 19, 20, 29, 30, 39, 60, 69, 70, 79, 80, 81, 88, 89, 90, 91, 92, 93, 96, 97, 98, 99],
+    offset: {
+        '03': [20,0],
+        '06': [20,0],
+        '04': [15,0],
+        '05': [15,0],
+        '21': [5,5],
+        '28': [5,-5],
+        '30': [0,20],
+        '39': [0,-20],
+        '40': [0,15],
+        '50': [0,15],
+        '49': [0,-15],
+        '59': [0,-15],
+        '60': [0,20],
+        '69': [0,-20],
+        '71': [-5,5],
+        '78': [-5,-5],
+        '93': [-20,0],
+        '94': [-15,0],
+        '95': [-15,0],
+        '96': [-20,0],
+    },
+    colors: ['ff0000', '00ff00', '0000ff', 'ffff00'],
+    levels: [
+        [
+            ['2187', '7166', '2382'],
+            ['2187', '0566', '0328'],
+            ['1259', '5278', '6057'],
+            ['2460', '0657', '1274'],
+            ['1269', '2687', '2157'],
+            ['4036', '3378', '1274'],
+            ['2193', '2460', '4057'],
+            ['2124', '2872', '0547'],
+        ],
+        [
+            ['0454', '4078', '2135','2876'],
+            ['2125', '0647', '2873', '6075'],
+            ['2146', '1764', '2594', '3378'],
+            ['1244', '2833', '4294', '4660'],
+            ['3073', '0565', '3693', '3459'],
+            ['0334', '2659', '4296', '6671'],
+            ['2176', '0432', '4694', '2359'],
+            ['1734', '1369', '5295', '6671'],
+        ],
+        [
+            ['3056', '0537', '3593', '2852'],
+            ['0575', '4249', '2595', '4047'],
+            ['4387', '1256', '3693', '1763'],
+            ['0474', '1776', '5471', '8226'],
+        ],
+    ],
+    done: [],
+    paths: [],
+    levelCompleted: [],
+    currentLevel: '00',
+    currentTarget: '',
+    startX: 0,
+    startY: 0,
+};
+(function ($) {
+    let wc = $('#welcome'),
+        gm = $('#game_menu'),
+        gw = $('#game_wrapper'),
+        gs = $('#game'),
+        ps = $('#path'),
+        ln = $('#level_name'),
+        settings = $('#settings'),
+        ctx = gs[0].getContext('2d'),
+        ptx = ps[0].getContext('2d'),
+        chtx = $('#check')[0].getContext('2d'),
+        x = 0,
+        y = 0,
+        path = [],
+        canvas = document.getElementById('game');
+
+    const init = () => {
+        if ($(window).width() < game.maxXY) game.maxXY = $(window).width();
+        gw.css({
+            width: game.maxXY + 'px',
+            height: game.maxXY + 'px',
+        });
+        ptx.canvas.height = ctx.canvas.height = chtx.canvas.height = game.maxXY;
+        ptx.canvas.width = ctx.canvas.width = chtx.canvas.width = game.maxXY;
+        ptx.lineCap = ctx.lineCap = chtx.lineCap = 'round';
+        ptx.lineWidth = ctx.lineWidth = chtx.lineWidth = game.lineWidth;
+
+        getData();
+        goLevel();
+    }
+
+    const updateData = () => {
+        const data = {
+            levelCompleted: game.levelCompleted
+        };
+        localStorage.setItem('twodots', JSON.stringify(data));
+    }
+    const getData = () => {
+        const data = JSON.parse(localStorage.getItem('twodots'));
+        if (data) {
+            game.levelCompleted = data.levelCompleted ? data.levelCompleted : [];
+        }
+    }
+    const drawGame = () => {
+        ptx.fillStyle = 'white';
+        ctx.clearRect(0, 0, gs[0].width, gs[0].height);
+        ptx.fillRect(0, 0, gs[0].width, gs[0].height);
+        ctx.strokeStyle = '#000';
+
+        drawCircle();
+
+        if(game.paths.length) {
+            ctx.lineWidth = game.lineWidth;
+            for(i in game.paths) {
+                ctx.strokeStyle = game.paths[i].color;
+                ctx.stroke(game.paths[i].path);
+            }
+        }
+
+        [a, b] = game.currentLevel.split('');
+        let nodes = game.levels[a][b];
+        for (i in nodes) {
+            [a, b, c, d] = nodes[i].toString().split('');
+            placeNode(a, b, c, d, i);
+            placeNode(c, d, a, b, i);
+        }
+
+        // showGrid();
+    }
+    const goLevel = () => {
+        game.paths = [];
+        game.done = [];
+        game.paths = [];
+        game.currentTarget = '';
+        drawGame();
+    }
+    const placeNode = (x, y, a, b, c) => {
+        const step = game.maxXY / 10,
+            w = step * 0.8,
+            h = step / 2,
+            offset = game.offset[x+''+y];
+
+        let t = (y * step) + h,
+            l = (x * step) + h;
+
+        if(offset) {
+            l += offset[0];
+            t += offset[1];
+        }
+
+        const p = new Path2D();
+        ctx.beginPath();
+        p.arc(l, t, h, 0, 2 * Math.PI);
+        ptx.fillStyle = ctx.fillStyle = '#' + game.colors[c];
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#fff';
+        ctx.fill(p);
+        ctx.stroke(p);
+        ptx.fill(p);
+    }
+
+    const drawCircle = () => {
+        const p = new Path2D();
+        ctx.lineWidth = 3;
+        p.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 30), 0, 2 * Math.PI);
+        gw.find('img').css({
+            width: (game.maxXY-60) + 'px',
+            height: (game.maxXY-60) + 'px'
+        });
+        ctx.stroke(p);
+    }
+
+    const drawNode = (x, y) => {
+        const step = game.maxXY / 10,
+            w = step * 0.5,
+            h = step / 2,
+            offset = game.offset[x+''+y];
+
+        let t = (y * step) + h,
+            l = (x * step) + h;
+        if(offset) {
+            l += offset[0];
+            t += offset[1];
+        }
+
+        chtx.beginPath();
+        chtx.arc(l, t, (w / 2), 0, 2 * Math.PI);
+        chtx.fillStyle = '#000';
+        chtx.fill();
+    }
+
+    const showGrid = () => {
+        let w = game.maxXY,
+            h = game.maxXY,
+            s = game.maxXY / 10;
+        ctx.lineWidth = 1;
+        for (x = 0; x <= w; x += s) {
+            for (y = 0; y <= h; y += s) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+                showNodeID(x, y, s);
+            }
+        }
+
+    }
+
+    const showNodeID = (x, y, s) => {
+        if ((y / s) > 9 || (x / s) > 9) return;
+        gw.append('<b style="display: block; position: absolute; z-index: 9999; text-align: center; font-size: 16px; ' +
+            'width: ' + s + 'px;' +
+            'line-height: ' + s + 'px;' +
+            'height: ' + s + 'px;' +
+            'top:' + (y) + 'px;' +
+            'left:' + (x) + 'px;' + '" ' +
+            '>' + (x / s) + '-' + (y / s) + '</b>');
+    }
+
+    const checkPath = () => {
+        let valid = true,
+            pt = new Path2D(),
+            step = game.lineWidth;
+        chtx.strokeStyle = 'rgba(0,0,0,0.2)';
+        chtx.fillStyle = "white";
+        chtx.fillRect(0, 0, gs[0].width, gs[0].height);
+
+        for (i in game.paths) {
+            chtx.lineWidth = game.lineWidth;
+            chtx.stroke(game.paths[i].path);
+        }
+        for (i in path) {
+            let c = path[i].split(',');
+            if (i > 0) {
+                pt.lineTo(c[0], c[1]);
+                pt.moveTo(c[0], c[1]);
+            } else {
+                pt.moveTo(c[0], c[1]);
+            }
+        }
+        chtx.stroke(pt);
+
+        pt = new Path2D();
+        chtx.lineWidth = 5;
+        pt.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 30), 0, 2 * Math.PI);
+        chtx.stroke(pt);
+
+        if(game.maxXY >= 500) {
+            [a, b] = game.currentLevel.split('');
+            let nodes = game.levels[a][b];
+            for (i in nodes) {
+                [a, b, c, d] = nodes[i].toString().split('');
+                drawNode(a, b);
+                drawNode(c, d);
+            }
+        }
+
+        let pixel;
+        for (let i = 30; i <= (game.maxXY-30); i += step) {
+            for (let h = 30; h <= (game.maxXY-30); h += step) {
+                pixel = chtx.getImageData(i, h, 1, 1).data;
+                if ((
+                    pixel[0] > 0 ||
+                    pixel[1] > 0 ||
+                    pixel[2] > 0
+                ) && (
+                    pixel[0] < 200 ||
+                    pixel[1] < 200 ||
+                    pixel[2] < 200
+                )) {
+                    valid = false;
+                }
+                if (!valid) {
+                    break;
+                }
+            }
+            if (!valid) break;
+        }
+        if (valid) {
+            registerPath();
+            return true;
+        }
+        alert('invalid move!');
+
+        path = [];
+        drawGame();
+        return false;
+    }
+    const registerPath = () => {
+        const p = new Path2D();
+        ctx.lineWidth = game.lineWidth;
+        for (i in path) {
+            let c = path[i].split(',');
+            if (i > 0) {
+                p.lineTo(c[0], c[1]);
+                p.moveTo(c[0], c[1]);
+            } else {
+                p.moveTo(c[0], c[1]);
+            }
+        }
+        [r,g,b]  = game.currentTarget.split(',');
+        game.paths.push({
+            color: '#' + rgbToHex(parseInt(r),parseInt(g),parseInt(b)),
+            path: p,
+        });
+        game.done.push(game.currentTarget);
+        game.currentTarget = '';
+        path = [];
+        drawGame();
+    }
+    const stopDraw = () => {
+        if (game.waitingDraw) {
+            game.waitingDraw = false;
+            game.currentTarget = '';
+            return;
+        }
+        if (!game.canDraw) return;
+        game.canDraw = false;
+        if (!game.valid) {
+            drawGame();
+            return path = [];
+        }
+        if (checkPath()) {
+            checkWinner();
+        }
+        game.valid = false;
+    }
+    const checkWinner = () => {
+        [a, b] = game.currentLevel.split('');
+        let nodes = game.levels[a][b];
+        if (game.done.length >= nodes.length) {
+            if (!game.levelCompleted.includes(game.currentLevel)) {
+                game.levelCompleted.push(game.currentLevel);
+            }
+            updateData();
+            alert('Well done!');
+            gm.removeClass('d-none');
+            gw.addClass('d-none');
+            settings.addClass('d-none');
+            gameMenu(game.currentLevel.substring(0, 1));
+        }
+    }
+    const drawPath = (newX, newY) => {
+        const pixel = getPixel(newX,newY);
+        const currentColor = pixel[0]+','+pixel[1]+','+pixel[2];
+        if(game.waitingDraw) {
+            if(currentColor === '255,255,255') {
+                game.waitingDraw = false;
+                game.canDraw = true;
+                [r,g,b]  = game.currentTarget.split(',');
+                ctx.strokeStyle = '#' + rgbToHex(parseInt(r),parseInt(g),parseInt(b));
+                game.startX = x = newX;
+                game.startY = y = newY;
+            }
+        }
+        if (game.canDraw) {
+            if(currentColor === game.currentTarget) {
+                if((Math.abs(game.startX - x) > 20) && Math.abs(game.startY - y) > 20) {
+                    game.valid = true;
+                }
+                stopDraw();
+            } else {
+                ctx.lineWidth = game.lineWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(newX, newY);
+                ctx.stroke();
+                x = newX;
+                y = newY;
+                path.push(x + ',' + y);
+            }
+        }
+    }
+    const prepareDraw = (x, y) => {
+        // check game state
+        if(!game.waitingDraw) {
+            const pixel = getPixel(x,y);
+            if((pixel[0]+pixel[1]+pixel[2] < 765) && !game.done.includes(pixel[0]+','+pixel[1]+','+pixel[2])) {
+                game.waitingDraw = true;
+                game.currentTarget = pixel[0]+','+pixel[1]+','+pixel[2];
+            }
+        }
+    }
+    const gameMenu = (item) => {
+        if (item < 0) return false;
+        let n = ['BEGINNER', 'INTERMEDIATE', 'EXPERT'];
+        gm.html('');
+        if (item.length === 1) {
+            let current = 0,
+                m = $('<div class="row lvl-select"></div>');
+            $('<h2>'+ n[item] +'</h2>').appendTo(gm);
+            for (let i = 0; i < game.levels[item].length; i++) {
+                let node = $('<div class="col-4"></div>');
+                if (!game.levelCompleted.includes(item + '' + i)) {
+                    if(!current) {
+                        current = 1;
+                        $('<div class="lvl-node"><button class="current" data-level="' + item + '' + i + '"><span>' + (i + 1) + '</span></button></div>').appendTo(node);
+                    } else {
+                        $('<div class="lvl-node"><button class="disabled" data-level="-1"><span>' + (i + 1) + '</span></button></div>').appendTo(node);
+                    }
+                } else {
+                    $('<div class="lvl-node"><button data-level="' + item + '' + i + '"><span>' + (i + 1) + '</span></button></div>').appendTo(node);
+                }
+                node.appendTo(m);
+            }
+            m.appendTo(gm);
+            $('<div class="col-12 text-center"><button data-level="main">BACK</button></div>').appendTo(gm);
+        } else if (item.length === 2) {
+            game.currentLevel = item;
+            $('.viewport').addClass('in-game');
+            gm.addClass('d-none');
+            ln.removeClass('d-none');
+            gw.removeClass('d-none');
+            settings.removeClass('d-none');
+            ln.find('h2').text(n[item.substring(0, 1)] + ' ' + (parseInt(item.substring(1)) + 1));
+            goLevel();
+        } else {
+            $('<h2>CHOOSE<br>DIFFICULTY</h2>').appendTo(gm);
+            for (let i = 0; i < game.levels.length; i++) {
+                $('<button data-level="' + i + '">' + n[i] + '</button>').appendTo(gm);
+            }
+        }
+    }
+    const getPixel = (x, y) => {
+        const pixel = ptx.getImageData(x, y, 1, 1).data;
+        return [pixel[0],pixel[1],pixel[2]];
+    };
+    const rgbToHex = (r, g, b) => {
+        if (r > 255 || g > 255 || b > 255)
+            throw "Invalid color component";
+        return (
+            ('0'+r.toString(16)).slice(-2) + '' +
+            ('0'+g.toString(16)).slice(-2) + '' +
+            ('0'+b.toString(16)).slice(-2)
+        );
+    }
+    const getColor = (color) => {
+        const r = parseInt(color.substring(0, 2), 16),
+            g = parseInt(color.substring(2, 4), 16),
+            b = parseInt(color.substring(4), 16);
+        return 'rgba(' + r + ',' + g + ',' + b + ',0.5)';
+    }
+    const goMain = () => {
+        $('.viewport').removeClass('in-game');
+        gm.removeClass('d-none');
+        ln.addClass('d-none');
+        wc.addClass('d-none');
+        gw.addClass('d-none');
+        settings.addClass('d-none');
+        gameMenu('main');
+    };
+    gm
+        .on('click', 'button', function (e) {
+            gameMenu($(this).data('level').toString());
+        });
+
+    wc
+        .on('click', '.go_main', function(e) {
+            goMain();
+        });
+    settings
+        .on('click', '.go_main', function (e) {
+            goMain();
+        })
+        .on('click', '#reset', function (e) {
+            goLevel();
+        });
+
+    gw
+        .on('touchstart', function(e) {
+            if (e.target == canvas) {
+                e.preventDefault();
+                prepareDraw(e.touches[0].clientX - gw.offset().left, e.touches[0].clientY - gw.offset().top);
+            }
+        })
+        .on('touchmove', function(e) {
+            if(
+                e.touches[0].clientX - gw.offset().left < 0 ||
+                e.touches[0].clientX > gw.width() ||
+                e.touches[0].clientY < gw.offset().top ||
+                e.touches[0].clientY > (gw.offset().top + gw.height())
+            ) {
+                stopDraw();
+            } else {
+                drawPath(e.touches[0].clientX - gw.offset().left, e.touches[0].clientY - gw.offset().top);
+            }
+        })
+        .on('touchend', stopDraw)
+        .on('mousedown',function (e) {
+            e.preventDefault();
+            prepareDraw(e.offsetX, e.offsetY);
+        })
+        .on('mousemove', function(e) {
+            drawPath(e.offsetX, e.offsetY);
+        })
+        .on('mouseup', stopDraw)
+        .on('mouseleave', stopDraw);
+    init();
+})(jQuery);

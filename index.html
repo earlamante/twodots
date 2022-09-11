@@ -16,41 +16,55 @@
 
 <body>
 
-<section class="container text-center py-4">
-    <div class="row">
-        <div class="col-12 position-relative">
-            <h1>Two Dots</h1>
-            <div class="top-menu">
-
+<div class="viewport">
+    <section class="toypix-logo text-center">
+        <div class="row">
+            <div class="col-12 position-relative">
+                <h1><img src="img/toypix.png" alt="ToyPix"></h1>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section id="game_menu" class="text-center">
-    <nav>
-        <button data-level="0">EASY</button>
-        <button data-level="1">INTERMEDIATE</button>
-        <button data-level="2">EXPERT</button>
-    </nav>
-</section>
+    <div class="main-content">
+        <section id="welcome" class="text-center">
+            <img class="w-100" src="img/logo.png" alt="Two Dots" style="margin-bottom: 150px;">
+            <nav>
+                <button class="go_main">PLAY</button>
+            </nav>
+        </section>
 
-<section id="settings" class="container text-center py-4 d-none">
-    <div class="row">
-        <div class="col-12">
-            <div class="text-center">
-                <button class="mb-2" id="go_main">Main Menu</button>
-                <button class="mb-2" id="reset">Reset</button>
+        <section id="game_menu" class="text-center d-none">
+            <h2>CHOOSE DIFFICULTY</h2>
+            <nav>
+                <button data-level="0">EASY</button>
+                <button data-level="1">INTERMEDIATE</button>
+                <button data-level="2">EXPERT</button>
+            </nav>
+        </section>
+
+        <section id="level_name" class="text-center d-none">
+            <h2></h2>
+        </section>
+
+        <section id="game_wrapper" class="text-center d-none">
+            <img src="img/bg-game.png">
+            <canvas id="game" class=""></canvas>
+            <canvas id="path" class="d-none"></canvas>
+            <canvas id="check" class="d-none"></canvas>
+        </section>
+
+        <section id="settings" class="container text-center d-none">
+            <div class="row">
+                <div class="col-12">
+                    <div class="text-center">
+                        <button class="go_main">MAIN MENU</button>
+                        <button class="" id="reset"><img src="img/reset.png" alt="Reset"></button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
-</section>
-
-<section id="game_wrapper" class="d-none">
-    <canvas id="game" class=""></canvas>
-    <canvas id="path" class="d-none"></canvas>
-    <canvas id="check" class="d-none"></canvas>
-</section>
+</div>
 
 <script src="js/jquery.min.js"></script>
 <script src="js/main.js"></script>
