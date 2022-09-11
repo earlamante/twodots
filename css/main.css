@@ -176,7 +176,7 @@ a.close {
     height: 80px;
 }
 .lvl-select span {
-    transform: translateX(-3px);
+    transform: translate(-3px, 3px);
 }
 .lvl-select button.current {
     background-image: linear-gradient(#D73838, #CB0301);
