@@ -343,6 +343,7 @@ let game = {
             updateData();
             alert('Well done!');
             gm.removeClass('d-none');
+            ln.addClass('d-none');
             gw.addClass('d-none');
             settings.addClass('d-none');
             gameMenu(game.currentLevel.substring(0, 1));
