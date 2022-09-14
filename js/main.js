@@ -3,29 +3,25 @@ let game = {
     waitingDraw: false,
     canDraw: false,
     valid: false,
-    lineWidth: 10,
+    lineWidth: 5,
     oob: [0, 1, 2, 3, 6, 7, 8, 9, 10, 11, 18, 19, 20, 29, 30, 39, 60, 69, 70, 79, 80, 81, 88, 89, 90, 91, 92, 93, 96, 97, 98, 99],
     offset: {
-        '03': [20,0],
-        '06': [20,0],
-        '04': [15,0],
-        '05': [15,0],
-        '21': [5,5],
-        '28': [5,-5],
-        '30': [0,20],
-        '39': [0,-20],
-        '40': [0,15],
-        '50': [0,15],
-        '49': [0,-15],
-        '59': [0,-15],
-        '60': [0,20],
-        '69': [0,-20],
-        '71': [-5,5],
-        '78': [-5,-5],
-        '93': [-20,0],
-        '94': [-15,0],
-        '95': [-15,0],
-        '96': [-20,0],
+        '03': [5,0],
+        '06': [5,0],
+        '12': [-5,0],
+        '17': [-5,0],
+        '21': [-5,-5],
+        '28': [-5,5],
+        '30': [0,5],
+        '39': [0,-5],
+        '60': [0,5],
+        '69': [0,-5],
+        '71': [5,-5],
+        '78': [5,5],
+        '82': [5,0],
+        '87': [5,0],
+        '93': [-5,0],
+        '96': [-5,0]
     },
     colors: ['ff0000', '00ff00', '0000ff', 'ffff00'],
     levels: [
@@ -168,17 +164,16 @@ let game = {
     const drawCircle = () => {
         const p = new Path2D();
         ctx.lineWidth = 3;
-        p.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 30), 0, 2 * Math.PI);
+        p.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 15), 0, 2 * Math.PI);
         gw.find('img').css({
-            width: (game.maxXY-60) + 'px',
-            height: (game.maxXY-60) + 'px'
+            width: (game.maxXY-30) + 'px',
+            height: (game.maxXY-30) + 'px'
         });
         ctx.stroke(p);
     }
 
     const drawNode = (x, y) => {
         const step = game.maxXY / 10,
-            w = step * 0.5,
             h = step / 2,
             offset = game.offset[x+''+y];
 
@@ -190,8 +185,10 @@ let game = {
         }
 
         chtx.beginPath();
-        chtx.arc(l, t, (w / 2), 0, 2 * Math.PI);
-        chtx.fillStyle = '#000';
+        chtx.arc(l, t, h, 0, 2 * Math.PI);
+        chtx.fillStyle = '#fff';
+        chtx.fill();
+        chtx.fillStyle = 'rgba(0,0,0,0.2)';
         chtx.fill();
     }
 
@@ -250,17 +247,15 @@ let game = {
 
         pt = new Path2D();
         chtx.lineWidth = 5;
-        pt.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 30), 0, 2 * Math.PI);
+        pt.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 15), 0, 2 * Math.PI);
         chtx.stroke(pt);
 
-        if(game.maxXY >= 500) {
-            [a, b] = game.currentLevel.split('');
-            let nodes = game.levels[a][b];
-            for (i in nodes) {
-                [a, b, c, d] = nodes[i].toString().split('');
-                drawNode(a, b);
-                drawNode(c, d);
-            }
+        [a, b] = game.currentLevel.split('');
+        let nodes = game.levels[a][b];
+        for (i in nodes) {
+            [a, b, c, d] = nodes[i].toString().split('');
+            drawNode(a, b);
+            drawNode(c, d);
         }
 
         let pixel;

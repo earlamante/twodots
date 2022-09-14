@@ -21,7 +21,7 @@ h2 {
     background: #000;
     color: #fff;
     letter-spacing: 5px;
-    margin: 0 -10px 80px;
+    margin: 0 -10px 50px;
     min-height: 80px;
     display: flex;
     justify-content: center;
@@ -187,7 +187,7 @@ a.close {
 
 #settings {
     padding: 15px;
-    margin-top: 80px;
+    margin-top: 50px;
     background: rgba(0,0,0,0.4);
 }
 #settings button {
@@ -214,7 +214,7 @@ a.close {
 @media (min-width: 768px) {
     .viewport {
         aspect-ratio: 9 / 16;
-        height: auto;
+        height: 100vh;
         overflow: hidden;
     }
 }
