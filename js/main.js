@@ -185,7 +185,7 @@ let game = {
         }
 
         chtx.beginPath();
-        chtx.arc(l, t, h, 0, 2 * Math.PI);
+        chtx.arc(l, t, (h * 0.8), 0, 2 * Math.PI);
         chtx.fillStyle = '#fff';
         chtx.fill();
         chtx.fillStyle = 'rgba(0,0,0,0.2)';
@@ -230,6 +230,20 @@ let game = {
         chtx.fillStyle = "white";
         chtx.fillRect(0, 0, gs[0].width, gs[0].height);
 
+        pt = new Path2D();
+        chtx.lineWidth = 5;
+        pt.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 15), 0, 2 * Math.PI);
+        chtx.stroke(pt);
+
+        [a, b] = game.currentLevel.split('');
+        let nodes = game.levels[a][b];
+        for (i in nodes) {
+            [a, b, c, d] = nodes[i].toString().split('');
+            drawNode(a, b);
+            drawNode(c, d);
+        }
+
+        pt = new Path2D();
         for (i in game.paths) {
             chtx.lineWidth = game.lineWidth;
             chtx.stroke(game.paths[i].path);
@@ -244,19 +258,6 @@ let game = {
             }
         }
         chtx.stroke(pt);
-
-        pt = new Path2D();
-        chtx.lineWidth = 5;
-        pt.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 15), 0, 2 * Math.PI);
-        chtx.stroke(pt);
-
-        [a, b] = game.currentLevel.split('');
-        let nodes = game.levels[a][b];
-        for (i in nodes) {
-            [a, b, c, d] = nodes[i].toString().split('');
-            drawNode(a, b);
-            drawNode(c, d);
-        }
 
         let pixel;
         for (let i = 30; i <= (game.maxXY-30); i += step) {
