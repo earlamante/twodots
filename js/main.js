@@ -61,7 +61,9 @@ let game = {
     startY: 0,
 };
 (function ($) {
-    let wc = $('#welcome'),
+    let vp = $('.viewport'),
+        pu = $('.popup'),
+        wc = $('#welcome'),
         gm = $('#game_menu'),
         gw = $('#game_wrapper'),
         gs = $('#game'),
@@ -284,7 +286,7 @@ let game = {
             registerPath();
             return true;
         }
-        alert('invalid move!');
+        myAlert('TRY AGAIN!');
 
         path = [];
         drawGame();
@@ -337,12 +339,14 @@ let game = {
                 game.levelCompleted.push(game.currentLevel);
             }
             updateData();
-            alert('Well done!');
-            gm.removeClass('d-none');
-            ln.addClass('d-none');
-            gw.addClass('d-none');
-            settings.addClass('d-none');
-            gameMenu(game.currentLevel.substring(0, 1));
+            myAlert('WELL DONE!', true);
+            setTimeout(() => {
+                gm.removeClass('d-none');
+                ln.addClass('d-none');
+                gw.addClass('d-none');
+                settings.addClass('d-none');
+                gameMenu(game.currentLevel.substring(0, 1));
+            }, 1000);
         }
     }
     const drawPath = (newX, newY) => {
@@ -412,7 +416,7 @@ let game = {
             $('<div class="col-12 text-center"><button data-level="main">BACK</button></div>').appendTo(gm);
         } else if (item.length === 2) {
             game.currentLevel = item;
-            $('.viewport').addClass('in-game');
+            vp.addClass('in-game');
             gm.addClass('d-none');
             ln.removeClass('d-none');
             gw.removeClass('d-none');
@@ -446,13 +450,29 @@ let game = {
         return 'rgba(' + r + ',' + g + ',' + b + ',0.5)';
     }
     const goMain = () => {
-        $('.viewport').removeClass('in-game');
+        vp.removeClass('in-game');
         gm.removeClass('d-none');
         ln.addClass('d-none');
         wc.addClass('d-none');
         gw.addClass('d-none');
         settings.addClass('d-none');
         gameMenu('main');
+    };
+    const myAlert = (msg, success=false) => {
+        if(success) {
+            pu.addClass('success');
+        } else {
+            vp.addClass('error');
+            setTimeout(() => {
+                vp.removeClass('error');
+            }, 500);
+        }
+        pu.text(msg);
+        pu.removeClass('d-none');
+        setTimeout(() => {
+            pu.removeClass('success');
+            pu.addClass('d-none');
+        }, 1000);
     };
     gm
         .on('click', 'button', function (e) {
