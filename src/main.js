@@ -455,6 +455,7 @@ let game = {
     }
     const gameMenu = (item) => {
         if (item < 0) return false;
+        console.log(item);
         let n = ['beginner', 'intermediate', 'expert'];
         gm.html('');
         if (item.length === 1) {
@@ -477,7 +478,12 @@ let game = {
             }
             m.appendTo(gm);
             $('<div class="col-12 text-center pt-5"><a data-level="main"><img class="label-img" src="img/main_menu.png" style="max-height: 60px;"></a></div>').appendTo(gm);
-        } else if (item.length === 2) {
+        } else if (item === 'main') {
+            $('<h2><img class="label-img" src="img/choose.png"></h2>').appendTo(gm);
+            for (let i = 0; i < game.levels.length; i++) {
+                $('<a data-level="' + i + '" class="d-inline-block mb-3"><img src="img/' + n[i] + '.png"></a>').appendTo(gm);
+            }
+        } else if (item.length < 4) {
             game.currentLevel = item;
             vp.addClass('in-game');
             gm.addClass('d-none');
@@ -486,11 +492,6 @@ let game = {
             settings.removeClass('d-none');
             ln.find('h2').html('<img src="img/' + n[item.substring(0, 1)] + '.png"><span class="level-number '+ n[item.substring(0, 1)] +'">'+ (parseInt(item.substring(1)) + 1) +'</span>');
             goLevel();
-        } else {
-            $('<h2><img class="label-img" src="img/choose.png"></h2>').appendTo(gm);
-            for (let i = 0; i < game.levels.length; i++) {
-                $('<a data-level="' + i + '" class="d-inline-block mb-3"><img src="img/' + n[i] + '.png"></a>').appendTo(gm);
-            }
         }
     }
     const getPixel = (x, y) => {
