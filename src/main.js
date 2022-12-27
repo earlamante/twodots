@@ -1,5 +1,5 @@
 let game = {
-    maxXY: 350,
+    maxXY: 400,
     waitingDraw: false,
     canDraw: false,
     valid: false,
@@ -26,30 +26,46 @@ let game = {
     colors: ['ff0000', '00ff00', '0000ff', 'ffff00'],
     levels: [
         [
-            ['2187', '7166', '2382'],
-            ['2187', '0566', '0328'],
-            ['1259', '5278', '6057'],
-            ['2460', '0657', '1274'],
-            ['1269', '2687', '2157'],
-            ['4036', '3378', '1274'],
-            ['2193', '2460', '4057'],
-            ['2124', '2872', '0547'],
+            ['2187','7166','2382'],
+            ['2187','0566','0328'],
+            ['1259','5278','6057'],
+            ['2460','0657','1274'],
+            ['1269','2687','2157'],
+            ['4036','3378','1274'],
+            ['2193','2460','4057'],
+            ['2124','2872','0547'],
+            ['4294','1744','4671'],
+            ['0565','3482','4660'],
+            ['4795','4578','2582'],
+            ['0577','4382','3660'],
+            ['3795','1578','3371'],
+            ['1560','4782','2853'],
         ],
         [
-            ['0454', '4078', '2135','2876'],
-            ['2125', '0647', '2873', '6075'],
-            ['2146', '1764', '2594', '3378'],
-            ['1244', '2833', '4294', '4660'],
-            ['3073', '0565', '3693', '3459'],
-            ['0334', '2659', '4296', '6671'],
-            ['2176', '0432', '4694', '2359'],
-            ['1734', '1369', '5295', '6671'],
+            ['0454','4078','2135','2876'],
+            ['2125','0647','2873','6075'],
+            ['2146','1764','2594','3378'],
+            ['1244','2833','4294','4660'],
+            ['3073','0565','3693','3459'],
+            ['0334','2659','4296','6671'],
+            ['2176','0432','4694','2359'],
+            ['1734','1369','5295','6671'],
+            ['2682','3378','4830'],
+            ['7660','2682','0662'],
+            ['2682','1763','3073'],
+            ['5066','2596','1277'],
+            ['3282','2696','5059'],
+            ['3750','5387','1266'],
         ],
         [
-            ['3056', '0537', '3593', '2852'],
-            ['0575', '4249', '2595', '4047'],
-            ['4387', '1256', '3693', '1763'],
-            ['0474', '1776', '5471', '8226'],
+            ['3056','0537','3593','2852'],
+            ['0575','4249','2595','4047'],
+            ['4387','1256','3693','1763'],
+            ['0474','1776','5471','8226'],
+            ['2582','1378','5962','3295'],
+            ['3750','0469','0265','5396'],
+            ['6882','3787','3062','2371'],
+            ['2682','3478','2173','5296'],
         ],
     ],
     done: [],
@@ -156,7 +172,7 @@ let game = {
         ctx.beginPath();
         p.arc(l, t, h, 0, 2 * Math.PI);
         ptx.fillStyle = ctx.fillStyle = '#' + game.colors[c];
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 4;
         ctx.strokeStyle = '#fff';
         ctx.fill(p);
         ctx.stroke(p);
@@ -165,7 +181,7 @@ let game = {
 
     const drawCircle = () => {
         const p = new Path2D();
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 5;
         p.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 15), 0, 2 * Math.PI);
         gw.find('img').css({
             width: (game.maxXY-30) + 'px',
@@ -439,28 +455,28 @@ let game = {
     }
     const gameMenu = (item) => {
         if (item < 0) return false;
-        let n = ['BEGINNER', 'INTERMEDIATE', 'EXPERT'];
+        let n = ['beginner', 'intermediate', 'expert'];
         gm.html('');
         if (item.length === 1) {
             let current = 0,
                 m = $('<div class="row lvl-select"></div>');
-            $('<h2>'+ n[item] +'</h2>').appendTo(gm);
+            $('<h2><img src="img/' + n[item] + '.png"></h2>').appendTo(gm);
             for (let i = 0; i < game.levels[item].length; i++) {
                 let node = $('<div class="col-4"></div>');
                 if (!game.levelCompleted.includes(item + '' + i)) {
                     if(!current) {
                         current = 1;
-                        $('<div class="lvl-node"><button class="current" data-level="' + item + '' + i + '"><span>' + (i + 1) + '</span></button></div>').appendTo(node);
+                        $('<div class="lvl-node"><a class="current '+ n[item] +'" data-level="' + item + '' + i + '"><span>' + (i + 1) + '</span></a></div>').appendTo(node);
                     } else {
-                        $('<div class="lvl-node"><button class="disabled" data-level="-1"><span>' + (i + 1) + '</span></button></div>').appendTo(node);
+                        $('<div class="lvl-node"><a class="disabled" data-level="-1"><span>' + (i + 1) + '</span></a></div>').appendTo(node);
                     }
                 } else {
-                    $('<div class="lvl-node"><button data-level="' + item + '' + i + '"><span>' + (i + 1) + '</span></button></div>').appendTo(node);
+                    $('<div class="lvl-node"><a class="completed" data-level="' + item + '' + i + '"><span>' + (i + 1) + '</span></a></div>').appendTo(node);
                 }
                 node.appendTo(m);
             }
             m.appendTo(gm);
-            $('<div class="col-12 text-center"><button data-level="main">BACK</button></div>').appendTo(gm);
+            $('<div class="col-12 text-center pt-5"><a data-level="main"><img class="label-img" src="img/main_menu.png" style="max-height: 60px;"></a></div>').appendTo(gm);
         } else if (item.length === 2) {
             game.currentLevel = item;
             vp.addClass('in-game');
@@ -468,12 +484,12 @@ let game = {
             ln.removeClass('d-none');
             gw.removeClass('d-none');
             settings.removeClass('d-none');
-            ln.find('h2').text(n[item.substring(0, 1)] + ' ' + (parseInt(item.substring(1)) + 1));
+            ln.find('h2').html('<img src="img/' + n[item.substring(0, 1)] + '.png"><span class="level-number '+ n[item.substring(0, 1)] +'">'+ (parseInt(item.substring(1)) + 1) +'</span>');
             goLevel();
         } else {
-            $('<h2>CHOOSE<br>DIFFICULTY</h2>').appendTo(gm);
+            $('<h2><img class="label-img" src="img/choose.png"></h2>').appendTo(gm);
             for (let i = 0; i < game.levels.length; i++) {
-                $('<button data-level="' + i + '">' + n[i] + '</button>').appendTo(gm);
+                $('<a data-level="' + i + '" class="d-inline-block mb-3"><img src="img/' + n[i] + '.png"></a>').appendTo(gm);
             }
         }
     }
@@ -522,7 +538,7 @@ let game = {
         }, 1000);
     };
     gm
-        .on('click', 'button', function (e) {
+        .on('click', 'a', function (e) {
             gameMenu($(this).data('level').toString());
         });
 
