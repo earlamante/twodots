@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Two Dots</title>
+    <title>Connect the Dots</title>
     <meta name="description" content="Try to connect the same color dots without crossing any lines.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image" content="img/meta.jpg">
@@ -31,14 +31,15 @@
 
     <div class="main-content">
         <section id="welcome" class="text-center">
-            <img class="w-100" src="img/logo.png" alt="Two Dots" style="margin-bottom: 100px;">
+            <img class="w-100" src="img/logo.png" alt="Two Dots" style="margin-bottom: 15px;">
+            <p class="footnote" style="margin-bottom: 150px;">Connect the dots of the same color<br>without crossing any lines.</p>
             <nav>
-                <button class="go_main">PLAY</button>
+                <a class="go_main"><img src="img/play.png"></a>
             </nav>
         </section>
 
         <section id="game_menu" class="text-center d-none">
-            <h2>CHOOSE DIFFICULTY</h2>
+            <h2><img class="label-img" src="img/choose.png"></h2>
             <nav>
                 <button data-level="0">EASY</button>
                 <button data-level="1">INTERMEDIATE</button>
@@ -51,7 +52,7 @@
         </section>
 
         <section id="game_wrapper" class="text-center d-none">
-            <img src="img/bg-game.png">
+            <div></div>
             <canvas id="game" class=""></canvas>
             <canvas id="path" class="d-none"></canvas>
             <canvas id="check" class="d-none"></canvas>
@@ -61,8 +62,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="text-center">
-                        <button class="go_main">MAIN MENU</button>
-                        <button class="" id="reset"><img src="img/reset.png" alt="Reset"></button>
+                        <a class="go_main d-inline-block" style="transform: translateY(3px)"><img class="label-img" src="img/main_menu.png"></a>
+                        <a class="d-inline-block" id="reset"><img src="img/return.png" alt="Reset" style="max-height: 40px;"></a>
                     </div>
                 </div>
             </div>
