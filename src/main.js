@@ -145,7 +145,9 @@ let game = {
             }
         }
 
-        [a, b] = game.currentLevel.split('');
+        a = game.currentLevel.substring(0, 1);
+        b = game.currentLevel.substring(1);
+
         let nodes = game.levels[a][b];
         for (i in nodes) {
             [a, b, c, d] = nodes[i].toString().split('');
@@ -261,7 +263,8 @@ let game = {
         pt.arc((game.maxXY / 2), (game.maxXY / 2), ((game.maxXY / 2) - 15), 0, 2 * Math.PI);
         chtx.stroke(pt);
 
-        [a, b] = game.currentLevel.split('');
+        a = game.currentLevel.substring(0, 1);
+        b = game.currentLevel.substring(1);
         let nodes = game.levels[a][b];
         for (i in nodes) {
             [a, b, c, d] = nodes[i].toString().split('');
@@ -323,7 +326,8 @@ let game = {
         const p = new Path2D(),
             max = game.maxXY / 10;
         ctx.lineWidth = game.lineWidth;
-        [a, b] = game.currentLevel.split('');
+        a = game.currentLevel.substring(0, 1);
+        b = game.currentLevel.substring(1);
         let nodes = game.levels[a][b],
             c = nodes[getTargetIndex()].split(''),
             f = path[0].split(','),
@@ -408,7 +412,8 @@ let game = {
         return 0;
     }
     const checkWinner = () => {
-        [a, b] = game.currentLevel.split('');
+        a = game.currentLevel.substring(0, 1);
+        b = game.currentLevel.substring(1);
         let nodes = game.levels[a][b];
         if (game.done.length >= nodes.length) {
             if (!game.levelCompleted.includes(game.currentLevel)) {
