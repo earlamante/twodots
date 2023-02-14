@@ -108,6 +108,15 @@ h2 {
 #game_menu {
     background: rgba(255,255,255,0.5);
     padding: 25px;
+    max-height: 83vh;
+    overflow-y: overlay;
+}
+#game_menu a > img {
+    max-height: 70px;
+}
+
+#level_name h2 > img {
+    max-height: 94px;
 }
 
 .lvl-node {
@@ -310,7 +319,7 @@ a.close {
 
 .level-number {
     font-size: 69px;
-    transform: translate(-100%, -5px);
+    transform: translateY(-3px);
 }
 .level-number.beginner {
     color: #4548e5;
