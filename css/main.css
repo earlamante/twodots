@@ -116,7 +116,7 @@ h2 {
 }
 
 #level_name h2 > img {
-    max-height: 94px;
+    max-height: 70px;
 }
 
 .lvl-node {
@@ -318,7 +318,7 @@ a.close {
 }
 
 .level-number {
-    font-size: 69px;
+    font-size: 50px;
     transform: translateY(-3px);
 }
 .level-number.beginner {
@@ -335,11 +335,21 @@ a.close {
     .main-content {
         width: 80%;
     }
+
     .viewport {
         height: auto;
     }
+
     #game_wrapper {
         left: 0;
         transform: none;
+    }
+
+    #level_name h2 > img {
+        max-height: 94px;
+    }
+
+    .level-number {
+        font-size: 69px;
     }
 }
