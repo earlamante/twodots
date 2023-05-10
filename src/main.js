@@ -493,7 +493,7 @@ let game = {
                 node.appendTo(m);
             }
             m.appendTo(gm);
-            $('<div class="col-12 text-center pt-5"><a data-level="main"><img class="label-img" src="img/main_menu.png" style="max-height: 60px;"></a></div>').appendTo(gm);
+            $('<div class="col-12 text-center pt-3"><a data-level="main"><img class="label-img" src="img/main_menu.png" style="max-height: 60px;"></a></div>').appendTo(gm);
         } else if (item === 'main') {
             $('<h2><img class="label-img" src="img/choose.png"></h2>').appendTo(gm);
             for (let i = 0; i < game.levels.length; i++) {
